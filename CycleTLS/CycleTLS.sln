@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS", "CycleTLS\CycleTLS.csproj", "{AA68A63D-9982-487B-80B6-E70BBAB3E228}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{3E8E2529-3FF7-40A9-AB17-E39826D7F59E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Console", "Example.Console\Example.Console.csproj", "{F64BE423-0135-44EE-BC65-9FEC90F735FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.RestSharp", "Example.RestSharp\Example.RestSharp.csproj", "{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS.RestSharp", "CycleTLS.RestSharp\CycleTLS.RestSharp.csproj", "{875F412E-6371-415E-BC22-F3B16587A842}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA68A63D-9982-487B-80B6-E70BBAB3E228}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA68A63D-9982-487B-80B6-E70BBAB3E228}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA68A63D-9982-487B-80B6-E70BBAB3E228}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA68A63D-9982-487B-80B6-E70BBAB3E228}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F64BE423-0135-44EE-BC65-9FEC90F735FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F64BE423-0135-44EE-BC65-9FEC90F735FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F64BE423-0135-44EE-BC65-9FEC90F735FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F64BE423-0135-44EE-BC65-9FEC90F735FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{875F412E-6371-415E-BC22-F3B16587A842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{875F412E-6371-415E-BC22-F3B16587A842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{875F412E-6371-415E-BC22-F3B16587A842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{875F412E-6371-415E-BC22-F3B16587A842}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F64BE423-0135-44EE-BC65-9FEC90F735FA} = {3E8E2529-3FF7-40A9-AB17-E39826D7F59E}
+		{C5920C41-ED12-4D03-BA8E-11F8209B1AD2} = {3E8E2529-3FF7-40A9-AB17-E39826D7F59E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E44120A4-C734-4ED9-A80E-A1A05C4F5625}
+	EndGlobalSection
+EndGlobal
