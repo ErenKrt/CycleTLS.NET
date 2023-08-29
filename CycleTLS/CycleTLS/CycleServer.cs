@@ -1,11 +1,6 @@
 ﻿using CycleTLS.Interfaces;
 using CycleTLS.Models;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CycleTLS
 {
@@ -14,7 +9,8 @@ namespace CycleTLS
         private readonly CycleServerOptions Options;
         private Process ServerProcess { get; set; }
 
-        public CycleServer(CycleServerOptions options) {
+        public CycleServer(CycleServerOptions options)
+        {
             Options = options;
         }
 

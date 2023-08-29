@@ -8,7 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CycleTLS\CycleTLS.csproj" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CycleTLS.RestSharp\CycleTLS.RestSharp.csproj" />
+    <ProjectReference Include="..\..\CycleTLS\CycleTLS.csproj" />
   </ItemGroup>
 
 </Project>

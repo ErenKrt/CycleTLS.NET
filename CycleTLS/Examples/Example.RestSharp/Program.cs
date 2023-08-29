@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using CycleTLS;
 using CycleTLS.Interfaces;
-using CycleTLS.Models;
 using CycleTLS.RestSharp.Helpers;
 using RestSharp;
 using System.Net;
@@ -26,7 +25,7 @@ var resGet = await restClient.ExecuteCycleAsync(getRequest, cycleClient);
 */
 RestRequest postRequest = new RestRequest()
 {
-    Method= Method.Post,
+    Method = Method.Post,
     Resource = "post",
 };
 
@@ -39,6 +38,6 @@ postRequest.AddJsonBody(new
     test = "1"
 });
 
-var resPost= await restClient.ExecuteCycleAsync(postRequest, cycleClient);
+var resPost = await restClient.ExecuteCycleAsync(postRequest, cycleClient);
 
 Console.ReadLine();

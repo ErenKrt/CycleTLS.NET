@@ -2,7 +2,6 @@
 using CycleTLS.Interfaces;
 using CycleTLS.Models;
 using Newtonsoft.Json;
-using System.Diagnostics;
 using Websocket.Client;
 
 namespace CycleTLS
@@ -30,7 +29,7 @@ namespace CycleTLS
             CycleRequest request = new();
             request.RequestId = $"{DateTime.Now}:{options.Url}";
             request.Options = options;
-            
+
             await CycleWS.SendInstantJson(request);
 
             var response = await WSResponseTask.Task;
@@ -39,7 +38,7 @@ namespace CycleTLS
 
         public void Dispose()
         {
-            if(CycleWS != null)
+            if (CycleWS != null)
             {
                 CycleWS.Dispose();
                 CycleWS = null;
