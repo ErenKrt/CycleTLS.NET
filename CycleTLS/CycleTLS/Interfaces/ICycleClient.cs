@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CycleTLS.Interfaces
 {
-    public interface ICycleClient
+    public interface ICycleClient : IDisposable
     {
         Task<CycleResponse> SendAsync(CycleRequestOptions options);
     }

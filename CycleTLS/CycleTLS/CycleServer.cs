@@ -1,4 +1,5 @@
 ﻿using CycleTLS.Interfaces;
+using CycleTLS.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,43 +11,50 @@ namespace CycleTLS
 {
     public class CycleServer : ICycleServer
     {
-        private readonly int Port;
-        private readonly string CyclePath = "D:\\Tools\\cycleTLS\\server.exe";
+        private readonly CycleServerOptions Options;
         private Process ServerProcess { get; set; }
 
-
-        // TODO: make CycleServerOptions
-        // TODO: make multi platform (windows, linux, mac) support
-
-        public CycleServer(int port= 9112) {
-            Port = port;
+        public CycleServer(CycleServerOptions options) {
+            Options = options;
         }
 
-        public async Task<bool> Start()
+        public bool Start()
         {
 
             ServerProcess = new Process();
             ServerProcess.StartInfo = new ProcessStartInfo()
             {
-                FileName = CyclePath,
-                WindowStyle = ProcessWindowStyle.Hidden
+                FileName = Options.Path,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = false,
+                CreateNoWindow = true,
             };
-            ServerProcess.StartInfo.EnvironmentVariables.Add("WS_PORT", Port.ToString());
+            ServerProcess.StartInfo.EnvironmentVariables.Add("WS_PORT", Options.Port.ToString());
             ServerProcess.Start();
 
-            /*
-             TODO: need imp
-             */
-            AppDomain.CurrentDomain.ProcessExit += (sender, e) => {
-                if (ServerProcess.HasExited)
-                {
-                    return;
-                }
-
-                ServerProcess.Kill();
-            };
+            AppDomain.CurrentDomain.ProcessExit += ProcessExit;
 
             return true;
+        }
+
+        private void ProcessExit(object sender, EventArgs e)
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (ServerProcess != null)
+            {
+                if (!ServerProcess.HasExited)
+                {
+                    ServerProcess.Kill();
+                }
+                ServerProcess.Dispose();
+                ServerProcess = null;
+            }
+
+            AppDomain.CurrentDomain.ProcessExit -= ProcessExit;
         }
     }
 }

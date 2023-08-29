@@ -9,7 +9,7 @@ namespace CycleTLS
 {
     public class CycleClient : ICycleClient
     {
-        private readonly IWebsocketClient CycleWS;
+        private IWebsocketClient CycleWS;
         private TaskCompletionSource<string> WSResponseTask;
 
         public CycleClient(Uri cycleWS)
@@ -32,8 +32,18 @@ namespace CycleTLS
             request.Options = options;
             
             await CycleWS.SendInstantJson(request);
+
             var response = await WSResponseTask.Task;
             return JsonConvert.DeserializeObject<CycleResponse>(response);
+        }
+
+        public void Dispose()
+        {
+            if(CycleWS != null)
+            {
+                CycleWS.Dispose();
+                CycleWS = null;
+            }
         }
     }
 }

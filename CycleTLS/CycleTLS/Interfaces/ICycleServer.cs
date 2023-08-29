@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CycleTLS.Interfaces
 {
-    public interface ICycleServer
+    public interface ICycleServer : IDisposable
     {
-        public Task<bool> Start();
+        public bool Start();
     }
 }
