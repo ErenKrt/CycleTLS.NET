@@ -4,6 +4,7 @@ using CycleTLS.Models;
 
 using RestSharp;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 using System.Web;
 
@@ -56,13 +57,19 @@ namespace CycleTLS.RestSharp.Helpers
                     HttpOnly = x.HttpOnly,
                     MaxAge = 90,
                     Path = x.Path,
-                }).ToList() : null
+                }).ToList() : null,
             };
 
             var proxy = restClient.Options.Proxy;
             if (proxy is WebProxy webProxy)
             {
                 cycleOptions.Proxy = webProxy.toStringWithCredentials();
+            }
+
+            var ja3 = request.Parameters.FirstOrDefault(x => x.Type == ParameterType.HttpHeader && x.Name.ToLower() == "ja3");
+            if (ja3 is not null)
+            {
+                cycleOptions.Ja3 = ja3.Value.ToString();
             }
 
             var response = await cycleClient.SendAsync(cycleOptions);
