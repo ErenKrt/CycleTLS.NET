@@ -20,7 +20,7 @@ namespace CycleTLS.RestSharp.Helpers
             allParams.Add(new HeaderParameter(KnownHeaders.Accept, string.Join(", ", restClient.AcceptedContentTypes)));
 
             var headers = allParams
-            .Where(x => string.Equals(x.Name, "ja3", StringComparison.OrdinalIgnoreCase))
+            .Where(x => !string.Equals(x.Name, "ja3", StringComparison.OrdinalIgnoreCase))
             .ToDictionary(x => x.Name, x => x.Value?.ToString());
 
             var queryString = HttpUtility.ParseQueryString(string.Empty);
