@@ -14,9 +14,14 @@ namespace CycleTLS.RestSharp.Helpers
     {
         public static async Task<RestResponse> ExecuteCycleAsync(this RestClient restClient, RestRequest request, ICycleClient cycleClient)
         {
-            var headers = request.Parameters
-                .Where(x => x.Type == ParameterType.HttpHeader)
-                .ToDictionary(x => x.Name, x => x.Value.ToString());
+
+            var allParams = request.Parameters.AddParameters(restClient.DefaultParameters).ToList();
+
+            allParams.Add(new HeaderParameter(KnownHeaders.Accept, string.Join(", ", restClient.AcceptedContentTypes)));
+
+            var headers = allParams
+            .Where(x => string.Equals(x.Name, "ja3", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(x => x.Name, x => x.Value?.ToString());
 
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             foreach (var item in request.Parameters.Where(x => x.Type == ParameterType.QueryString))
@@ -34,19 +39,21 @@ namespace CycleTLS.RestSharp.Helpers
 
             var cookies = request.CookieContainer?.GetAllCookies()?.ToList() ?? new List<Cookie>();
 
-            var url = $"{restClient.Options.BaseUrl}{request.Resource}";
-            if (queryString.HasKeys())
+            var url = new UriBuilder(restClient.Options.BaseUrl)
             {
-                url += "?" + queryString;
-            }
+                Path = request.Resource,
+                Query = queryString.ToString()
+            }.Uri.ToString();
 
-            var userAgent = request.Parameters.FirstOrDefault(x => x.Type == ParameterType.HttpHeader && x.Name.ToLower() == "user-agent");
+
+            var userAgent = GetUserAgent(request, headers, restClient.Options.UserAgent);
+
             var cycleOptions = new CycleRequestOptions
             {
                 Url = url,
                 Method = request.Method.ToString(),
                 Headers = headers.Any() ? headers : null,
-                UserAgent = userAgent?.Value?.ToString(),
+                UserAgent = userAgent,
                 Body = body,
                 Cookies = cookies.Any() ? cookies.Select(x => new CycleRequestCookie
                 {
@@ -66,7 +73,7 @@ namespace CycleTLS.RestSharp.Helpers
                 cycleOptions.Proxy = webProxy.toStringWithCredentials();
             }
 
-            var ja3 = request.Parameters.FirstOrDefault(x => x.Type == ParameterType.HttpHeader && x.Name.ToLower() == "ja3");
+            var ja3 = allParams.FirstOrDefault(x => x.Name.ToLower() == "ja3");
             if (ja3 is not null)
             {
                 cycleOptions.Ja3 = ja3.Value.ToString();
@@ -97,5 +104,12 @@ namespace CycleTLS.RestSharp.Helpers
             };
         }
 
+        private static string GetUserAgent(RestRequest request, IDictionary<string, string> headers, string defaultUserAgent)
+        {
+            var headerUserAgent = request.Parameters
+                .FirstOrDefault(x => x.Type == ParameterType.HttpHeader && string.Equals(x.Name, "user-agent", StringComparison.OrdinalIgnoreCase))?.Value?.ToString();
+
+            return headerUserAgent ?? headers.FirstOrDefault(x => string.Equals(x.Key, "user-agent", StringComparison.OrdinalIgnoreCase)).Value ?? defaultUserAgent;
+        }
     }
 }
