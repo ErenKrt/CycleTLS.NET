@@ -13,13 +13,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
-      - name: publish on version change
-        id: publish_nuget
-        uses: brandedoutcast/publish-nuget@v2
-        with:
-          PROJECT_FILE_PATH: src/CycleTLS/CycleTLS.csproj
-          VERSION_STATIC: 0.1.3
-          NUGET_KEY: '${{secrets.NUGET_API_KEY}}'
       - name: Pack
         run: dotnet pack --configuration Release /p:Version=0.1.3 --output .
       - name: Push
