@@ -1,5 +1,5 @@
 
-# CycleTLS.NET
+# CycleTLS.NETs
 
 A .NET client for [CycleTLS](https://github.com/Danny-Dasilva/CycleTLS).
 

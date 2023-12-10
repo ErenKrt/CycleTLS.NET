@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CycleTLS\CycleTLS.csproj" />
+    <ProjectReference Include="..\..\src\CycleTLS\CycleTLS.csproj" />
   </ItemGroup>
-
+	
 </Project>

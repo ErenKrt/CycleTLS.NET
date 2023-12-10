@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS", "CycleTLS\CycleTLS.csproj", "{AA68A63D-9982-487B-80B6-E70BBAB3E228}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\CycleTLS", "src\CycleTLS\CycleTLS.csproj", "{AA68A63D-9982-487B-80B6-E70BBAB3E228}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{3E8E2529-3FF7-40A9-AB17-E39826D7F59E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{3E8E2529-3FF7-40A9-AB17-E39826D7F59E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples\Example.Console", "Examples\Example.Console\Example.Console.csproj", "{F64BE423-0135-44EE-BC65-9FEC90F735FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "examples\Example.Console", "examples\Example.Console\Example.Console.csproj", "{F64BE423-0135-44EE-BC65-9FEC90F735FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples\Example.RestSharp", "Examples\Example.RestSharp\Example.RestSharp.csproj", "{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "examples\Example.RestSharp", "examples\Example.RestSharp\Example.RestSharp.csproj", "{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS.RestSharp", "CycleTLS.RestSharp\CycleTLS.RestSharp.csproj", "{875F412E-6371-415E-BC22-F3B16587A842}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\CycleTLS.RestSharp", "src\CycleTLS.RestSharp\CycleTLS.RestSharp.csproj", "{875F412E-6371-415E-BC22-F3B16587A842}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
