@@ -1,26 +1,37 @@
-name: publish to nuget
-'on':
+name: Publish to NuGET
+
+on:
   push:
-    branches:
-      - development
+    tags:
+    - "v[0-9]+.[0-9]+.[0-9]+"
+
 jobs:
   publish:
-    name: 'build, pack & publish'
+    name: 'build & Pack & Publish'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
 
+      - name: Extract version from tag
+        run: echo "VERSION=$(echo ${GITHUB_REF#refs/tags/v})" >> $GITHUB_ENV
+
       - name: Build
         run: dotnet build --configuration Release
 
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=0.1.4 --output .
+        run: dotnet pack --configuration Release /p:Version=${VERSION} --output .
 
-      - name: Push
-        run: dotnet nuget push CycleTLS.0.1.4.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_API_KEY}
+      - name: Push CycleTLS
+        run: dotnet nuget push CycleTLS.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_API_KEY}
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+      - name: Push CycleTLS.RestSharp
+        run: dotnet nuget push CycleTLS.RestSharp.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_API_KEY}
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
