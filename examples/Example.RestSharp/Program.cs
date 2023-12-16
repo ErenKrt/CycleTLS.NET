@@ -15,6 +15,7 @@ RestClient restClient = new(new RestClientOptions()
     BaseUrl = new Uri("https://example.org"),
     //Proxy= proxy
 });
+restClient.AddDefaultHeader("ja3", "ja3 value");
 /*
 RestRequest getRequest = new RestRequest()
 {

@@ -3,26 +3,38 @@
 
 A .NET client for [CycleTLS](https://github.com/Danny-Dasilva/CycleTLS).
 
-.NET 7.0 | You can build if you need another version of .net
+![GitHub Workflow](https://img.shields.io/github/actions/workflow/status/erenkrt/CycleTLS.NET/publish.yml)
+[![CycleTLS.NET](https://img.shields.io/nuget/dt/CycleTLS?label=NuGet%20CycleTLS)](https://www.nuget.org/packages/CycleTLS/)
+[![CycleTLS.NET.RestSharp](https://img.shields.io/nuget/dt/CycleTLS.RestSharp?label=NuGet%20CycleTLS.RestSharp)](https://www.nuget.org/packages/CycleTLS.RestSharp/)
+![GitHub tag](https://img.shields.io/github/v/tag/erenkrt/cycletls.net?label=Version)
 
-
-
+Supports .NET 8.0 (Build available for other .Net versions)
 ## Installation
 
-1. Download the latest release and import it into your project.
+### With Nuget
+1. In Visual Studio, right-click on your project's Solution Explorer and select 'Manage NuGet Packages'.
+2. Go to the 'Browse' tab, search for `CycleTLS` and `CycleTLS.RestSharp`.
+3. Click 'Install' for each package.
+4. Accept the prompts to complete installation.
 
-2. Next, you'll need to download the executable for [CycleTLS](https://www.npmjs.com/package/cycletls?activeTab=code). Install CycleTLS using NPM by following these steps:
+Or, via Package Manager Console:
+```bash
+Install-Package CycleTLS
+```
 
-    - Open your terminal or command prompt.
-    - Navigate to your project directory using the `cd` command.
-    - Run the following command to install CycleTLS: `npm install cycletls`
+### Manual Installation
 
-3. Once CycleTLS is installed, locate the executable file in the installation folder.
+1. Download the latest release of CycleTLS.NET's and import it into your project.
+2. Install CycleTLS using NPM:
+   - Open a terminal/command prompt.
+   - Navigate to your project directory (`cd your_project_path`).
+   - Run `npm install cycletls`.
 
-By following these steps, you'll have CycleTLS installed and ready to use in your project.
+Locate the CycleTLS executable in the installation folder after installation.
+
 ## Usage
 
-#### Server
+### Server
 
 ```csharp
 using CycleTLS;
@@ -57,10 +69,14 @@ RestClient restClient = new(new RestClientOptions()
     BaseUrl = new Uri("https://example.org"),
 });
 
+restClient.AddDefaultHeader("ja3", "ja3 value"); // Set JA3 all requests
+
 RestRequest request = new RestRequest()
 {
     Method= Method.GET,
 };
+
+request.AddHeader("ja3", "ja3 value"); // Set JA3 for specific request
 
 /* You can use all features of RestRequest object | For more information look examples */
 
@@ -69,5 +85,7 @@ var response= await restClient.ExecuteCycleAsync(request, cycleClient);
 ## Files you use
 
 * CylceTLS
-    * [CycleRequestOptions](https://github.com/ErenKrt/CycleTLS.NET/blob/main/CycleTLS/CycleTLS/Models/CycleRequestOptions.cs)
-    * [RestCyleExtensions](https://github.com/ErenKrt/CycleTLS.NET/blob/main/CycleTLS/Example.RestSharp/Example.RestSharp.csproj)
+    * [CycleRequestOptions](https://github.com/ErenKrt/CycleTLS.NET/blob/main/src/CycleTLS/Models/CycleRequestOptions.cs)
+    * [RestCyleExtensions](https://github.com/ErenKrt/CycleTLS.NET/blob/main/src/CycleTLS.RestSharp/Helpers/RestCyleExtensions.cs)
+
+[![Developer](https://img.shields.io/badge/-Developer-E4405F?style=flat-square&logo=Instagram&logoColor=white)](https://www.instagram.com/ep.eren)
