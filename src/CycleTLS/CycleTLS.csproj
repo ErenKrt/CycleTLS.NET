@@ -8,7 +8,7 @@
     <Title>CycleTLS</Title>
     <Authors>ErenKrt</Authors>
     <PackageProjectUrl>https://github.com/ErenKrt/CycleTLS.NET</PackageProjectUrl>
-    <Version>0.1.6</Version>
+    <Version>0.1.8</Version>
     <Description>A C# port of CycleTLS Go library.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
