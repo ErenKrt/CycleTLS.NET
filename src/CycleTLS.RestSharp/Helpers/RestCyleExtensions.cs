@@ -35,7 +35,7 @@ namespace CycleTLS.RestSharp.Helpers
 
             var cookies = request.CookieContainer?.GetAllCookies()?.ToList() ?? new List<Cookie>();
 
-            var url = restClient.Options.BaseUrl != null ? new Uri(restClient.Options.BaseUrl, request.Resource).ToString() : request.Resource;
+            var url = restClient.Options.BaseUrl != null ? new UriBuilder(restClient.Options.BaseUrl) { Path= request.Resource, Query = queryString.ToString() }.ToString() : request.Resource;
 
             var userAgent = GetUserAgent(request, headers, restClient.Options.UserAgent);
 
@@ -43,7 +43,7 @@ namespace CycleTLS.RestSharp.Helpers
             {
                 Url = url,
                 Method = request.Method.ToString(),
-                Headers = headers.Any() ? headers : null,
+                Headers = headers.Any() ? headers.Where(x=>!string.IsNullOrEmpty(x.Key)).ToDictionary() : null,
                 UserAgent = userAgent,
                 Body = body,
                 Cookies = cookies.Any() ? cookies.Select(x => new CycleRequestCookie
