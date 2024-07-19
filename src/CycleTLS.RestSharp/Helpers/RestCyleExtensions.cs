@@ -14,14 +14,17 @@ namespace CycleTLS.RestSharp.Helpers
     {
         public static async Task<RestResponse> ExecuteCycleAsync(this RestClient restClient, RestRequest request, ICycleClient cycleClient)
         {
-            var allParameters = request.Parameters.AddParameters(restClient.DefaultParameters).ToList();
+            var allParameters = request.Parameters
+                .AddParameters(restClient.DefaultParameters)
+                .ToList();
 
-            var ja3Param = request.Parameters.TryFind("ja3") ?? restClient.DefaultParameters.TryFind("ja3") ?? throw new Exception("You need set the JA3 to default header or request");
-            var userAgentParam= request.Parameters.TryFind("User-Agent") ?? restClient.DefaultParameters.TryFind("User-Agent") ?? throw new Exception("You need set the UserAgent of JA3 to default header or request");
+            var ja3Param = allParameters.TryFind("ja3") ?? throw new Exception("You need set the JA3 to default header or request");
+            var userAgentParam = allParameters.TryFind("User-Agent") ?? throw new Exception("You need set the UserAgent of JA3 to default header or request");
+
             var queryStringParams = allParameters
-            .Where(x => x.Type == ParameterType.QueryString)
-            .Select(x => $"{HttpUtility.UrlEncode(x.Name)}={HttpUtility.UrlEncode(x.Value?.ToString())}")
-            .ToList();
+                .Where(x => x.Type == ParameterType.QueryString)
+                .Select(x => $"{HttpUtility.UrlEncode(x.Name)}={HttpUtility.UrlEncode(x.Value?.ToString())}")
+                .ToList();
 
             var finalUrl = restClient.Options.BaseUrl != null
             ? new UriBuilder(restClient.Options.BaseUrl)
@@ -45,11 +48,12 @@ namespace CycleTLS.RestSharp.Helpers
             {
                 Url = finalUrl,
                 Method = request.Method.ToString(),
-                Headers = allParameters.Where(x => x.Type == ParameterType.HttpHeader)?.ToDictionary(x => x.Name, x => x.Value?.ToString()) ?? null,
-                UserAgent = userAgentParam?.Value.ToString(),
-                Ja3 = ja3Param?.Value.ToString(),
-                Body = bodyParam?.Value.ToString() ?? null,
-                Cookies = cookies.Any() ? cookies.Select(x => new CycleRequestCookie
+                Headers = allParameters.Where(x => x.Type == ParameterType.HttpHeader).ToDictionary(x => x.Name, x => x.Value?.ToString()),
+                UserAgent = userAgentParam.Value.ToString(),
+                Ja3 = ja3Param.Value.ToString(),
+                Body = bodyParam?.Value.ToString(),
+                Cookies = cookies.Any()
+                ? cookies.Select(x => new CycleRequestCookie
                 {
                     Domain = x.Domain,
                     Name = x.Name,
@@ -58,11 +62,12 @@ namespace CycleTLS.RestSharp.Helpers
                     HttpOnly = x.HttpOnly,
                     MaxAge = 90,
                     Path = x.Path,
-                }).ToList() : null,
-                Proxy = (restClient.Options.Proxy is WebProxy webProxy) ? webProxy.toStringWithCredentials() : null,
+                }).ToList()
+                : null,
+                Proxy = restClient.Options.Proxy is WebProxy webProxy ? webProxy.toStringWithCredentials() : null,
             };
 
-      
+
             var response = await cycleClient.SendAsync(cycleOptions);
 
             return new RestResponse
@@ -76,6 +81,11 @@ namespace CycleTLS.RestSharp.Helpers
                 ResponseUri = new Uri(finalUrl),
                 Server = response.Headers.TryGetValue("Server", out var server) ? server : null
             };
+        }
+
+        public static Parameter TryFind(this List<Parameter> parameters, string name)
+        {
+            return parameters.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
     }
