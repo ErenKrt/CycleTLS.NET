@@ -14,48 +14,46 @@ namespace CycleTLS.RestSharp.Helpers
     {
         public static async Task<RestResponse> ExecuteCycleAsync(this RestClient restClient, RestRequest request, ICycleClient cycleClient)
         {
+            var allParameters = request.Parameters
+                .AddParameters(restClient.DefaultParameters)
+                .ToList();
 
-            var allParams = request.Parameters.AddParameters(restClient.DefaultParameters).ToList();
+            var ja3Param = allParameters.TryFind("ja3") ?? throw new Exception("You need set the JA3 to default header or request");
+            var userAgentParam = allParameters.TryFind("User-Agent") ?? throw new Exception("You need set the UserAgent of JA3 to default header or request");
 
-            allParams.Add(new HeaderParameter(KnownHeaders.Accept, string.Join(", ", restClient.AcceptedContentTypes)));
+            var queryStringParams = allParameters
+                .Where(x => x.Type == ParameterType.QueryString)
+                .Select(x => $"{HttpUtility.UrlEncode(x.Name)}={HttpUtility.UrlEncode(x.Value?.ToString())}")
+                .ToList();
 
-            var headers = allParams
-            .Where(x => !string.Equals(x.Name, "ja3", StringComparison.OrdinalIgnoreCase))
-            .ToDictionary(x => x.Name, x => x.Value?.ToString());
-
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            foreach (var item in request.Parameters.Where(x => x.Type == ParameterType.QueryString))
+            var finalUrl = restClient.Options.BaseUrl != null
+            ? new UriBuilder(restClient.Options.BaseUrl)
             {
-                queryString.Add(item.Name, item.Value?.ToString());
-            }
+                Path = request.Resource,
+                Query = string.Join("&", queryStringParams)
+            }.Uri.ToString()
+            : request.Resource;
 
-            var bodyParam = request.Parameters.FirstOrDefault(x => x.Type == ParameterType.RequestBody);
-            var body = bodyParam?.Value?.ToString();
-            var contentType = bodyParam?.ContentType?.ToString();
-            if (!string.IsNullOrEmpty(contentType))
+
+            var bodyParam = allParameters.FirstOrDefault(x => x.Type == ParameterType.RequestBody);
+            if (bodyParam is not null)
             {
-                headers["Content-Type"] = contentType;
+                allParameters.Add(new HeaderParameter("Content-Type", bodyParam.ContentType));
             }
 
             var cookies = request.CookieContainer?.GetAllCookies()?.ToList() ?? new List<Cookie>();
 
-            var url = new UriBuilder(restClient.Options.BaseUrl)
-            {
-                Path = request.Resource,
-                Query = queryString.ToString()
-            }.Uri.ToString();
-
-
-            var userAgent = GetUserAgent(request, headers, restClient.Options.UserAgent);
 
             var cycleOptions = new CycleRequestOptions
             {
-                Url = url,
+                Url = finalUrl,
                 Method = request.Method.ToString(),
-                Headers = headers.Any() ? headers : null,
-                UserAgent = userAgent,
-                Body = body,
-                Cookies = cookies.Any() ? cookies.Select(x => new CycleRequestCookie
+                Headers = allParameters.Where(x => x.Type == ParameterType.HttpHeader).ToDictionary(x => x.Name, x => x.Value?.ToString()),
+                UserAgent = userAgentParam.Value.ToString(),
+                Ja3 = ja3Param.Value.ToString(),
+                Body = bodyParam?.Value.ToString(),
+                Cookies = cookies.Any()
+                ? cookies.Select(x => new CycleRequestCookie
                 {
                     Domain = x.Domain,
                     Name = x.Name,
@@ -64,52 +62,32 @@ namespace CycleTLS.RestSharp.Helpers
                     HttpOnly = x.HttpOnly,
                     MaxAge = 90,
                     Path = x.Path,
-                }).ToList() : null,
+                }).ToList()
+                : null,
+                Proxy = restClient.Options.Proxy is WebProxy webProxy ? webProxy.toStringWithCredentials() : null,
             };
 
-            var proxy = restClient.Options.Proxy;
-            if (proxy is WebProxy webProxy)
-            {
-                cycleOptions.Proxy = webProxy.toStringWithCredentials();
-            }
-
-            var ja3 = allParams.FirstOrDefault(x => x.Name.ToLower() == "ja3");
-            if (ja3 is not null)
-            {
-                cycleOptions.Ja3 = ja3.Value.ToString();
-            }
 
             var response = await cycleClient.SendAsync(cycleOptions);
-
-            string? GetHeader(string key)
-            {
-                if (response.Headers.ContainsKey(key))
-                {
-                    return response.Headers[key];
-                }
-
-                return null;
-            }
 
             return new RestResponse
             {
                 StatusCode = response.Status,
                 Content = response.Body,
-                ContentHeaders = response?.Headers.Select(x => new HeaderParameter(x.Key, x.Value)).ToList(),
-                ContentType = GetHeader("Content-Type"),
-                ContentLength = long.Parse(GetHeader("Content-Length") ?? "0"),
+                ContentHeaders = response.Headers.Select(x => new HeaderParameter(x.Key, x.Value)).ToList(),
+                ContentType = response.Headers.TryGetValue("Content-Type", out var contentType) ? contentType : null,
+                ContentLength = response.Headers.TryGetValue("Content-Length", out var contentLength) ? long.Parse(contentLength) : 0,
                 Request = request,
-                ResponseUri = new Uri(url),
-                Server = GetHeader("Server")
+                ResponseUri = new Uri(finalUrl),
+                Server = response.Headers.TryGetValue("Server", out var server) ? server : null
             };
         }
 
-        private static string GetUserAgent(RestRequest request, IDictionary<string, string> headers, string defaultUserAgent)
+        public static Parameter TryFind(this List<Parameter> parameters, string name)
         {
-            var headerUserAgent = request.Parameters
-                .FirstOrDefault(x => x.Type == ParameterType.HttpHeader && string.Equals(x.Name, "user-agent", StringComparison.OrdinalIgnoreCase))?.Value?.ToString();
-
-            return headerUserAgent ?? headers.FirstOrDefault(x => string.Equals(x.Key, "user-agent", StringComparison.OrdinalIgnoreCase)).Value ?? defaultUserAgent;
+            return parameters.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
+
     }
+
 }
