@@ -14,37 +14,28 @@ namespace CycleTLS.RestSharp.Helpers
     {
         public static async Task<RestResponse> ExecuteCycleAsync(this RestClient restClient, RestRequest request, ICycleClient cycleClient)
         {
-
             var allParams = request.Parameters.AddParameters(restClient.DefaultParameters).ToList();
-
-            allParams.Add(new HeaderParameter(KnownHeaders.Accept, string.Join(", ", restClient.AcceptedContentTypes)));
-
             var headers = allParams
-            .Where(x => !string.Equals(x.Name, "ja3", StringComparison.OrdinalIgnoreCase))
-            .ToDictionary(x => x.Name, x => x.Value?.ToString());
+                .Where(x => !string.Equals(x.Name, "ja3", StringComparison.OrdinalIgnoreCase))
+                .ToDictionary(x => x.Name, x => x.Value?.ToString());
 
             var queryString = HttpUtility.ParseQueryString(string.Empty);
-            foreach (var item in request.Parameters.Where(x => x.Type == ParameterType.QueryString))
+            foreach (var param in allParams.Where(x => x.Type == ParameterType.QueryString))
             {
-                queryString.Add(item.Name, item.Value?.ToString());
+                queryString.Add(param.Name, param.Value?.ToString());
             }
 
-            var bodyParam = request.Parameters.FirstOrDefault(x => x.Type == ParameterType.RequestBody);
+            var bodyParam = allParams.FirstOrDefault(x => x.Type == ParameterType.RequestBody);
             var body = bodyParam?.Value?.ToString();
-            var contentType = bodyParam?.ContentType?.ToString();
-            if (!string.IsNullOrEmpty(contentType))
+
+            if (bodyParam is not null && !string.IsNullOrEmpty(bodyParam?.ContentType))
             {
-                headers["Content-Type"] = contentType;
+                headers["Content-Type"] = bodyParam.ContentType;
             }
 
             var cookies = request.CookieContainer?.GetAllCookies()?.ToList() ?? new List<Cookie>();
 
-            var url = new UriBuilder(restClient.Options.BaseUrl)
-            {
-                Path = request.Resource,
-                Query = queryString.ToString()
-            }.Uri.ToString();
-
+            var url = restClient.Options.BaseUrl != null ? new Uri(restClient.Options.BaseUrl, request.Resource).ToString() : request.Resource;
 
             var userAgent = GetUserAgent(request, headers, restClient.Options.UserAgent);
 
@@ -67,40 +58,29 @@ namespace CycleTLS.RestSharp.Helpers
                 }).ToList() : null,
             };
 
-            var proxy = restClient.Options.Proxy;
-            if (proxy is WebProxy webProxy)
+            if (restClient.Options.Proxy is WebProxy webProxy)
             {
                 cycleOptions.Proxy = webProxy.toStringWithCredentials();
             }
 
-            var ja3 = allParams.FirstOrDefault(x => x.Name.ToLower() == "ja3");
-            if (ja3 is not null)
+            var ja3 = allParams.FirstOrDefault(x => x.Name.Equals("ja3", StringComparison.OrdinalIgnoreCase));
+            if (ja3 != null)
             {
                 cycleOptions.Ja3 = ja3.Value.ToString();
             }
 
             var response = await cycleClient.SendAsync(cycleOptions);
 
-            string? GetHeader(string key)
-            {
-                if (response.Headers.ContainsKey(key))
-                {
-                    return response.Headers[key];
-                }
-
-                return null;
-            }
-
             return new RestResponse
             {
                 StatusCode = response.Status,
                 Content = response.Body,
-                ContentHeaders = response?.Headers.Select(x => new HeaderParameter(x.Key, x.Value)).ToList(),
-                ContentType = GetHeader("Content-Type"),
-                ContentLength = long.Parse(GetHeader("Content-Length") ?? "0"),
+                ContentHeaders = response.Headers.Select(x => new HeaderParameter(x.Key, x.Value)).ToList(),
+                ContentType = response.Headers.TryGetValue("Content-Type", out var contentType) ? contentType : null,
+                ContentLength = response.Headers.TryGetValue("Content-Length", out var contentLength) ? long.Parse(contentLength) : 0,
                 Request = request,
                 ResponseUri = new Uri(url),
-                Server = GetHeader("Server")
+                Server = response.Headers.TryGetValue("Server", out var server) ? server : null
             };
         }
 
@@ -112,4 +92,5 @@ namespace CycleTLS.RestSharp.Helpers
             return headerUserAgent ?? headers.FirstOrDefault(x => string.Equals(x.Key, "user-agent", StringComparison.OrdinalIgnoreCase)).Value ?? defaultUserAgent;
         }
     }
+
 }
