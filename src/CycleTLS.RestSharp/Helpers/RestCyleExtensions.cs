@@ -3,6 +3,7 @@ using CycleTLS.Interfaces;
 using CycleTLS.Models;
 
 using RestSharp;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -26,29 +27,56 @@ namespace CycleTLS.RestSharp.Helpers
                 .Select(x => $"{HttpUtility.UrlEncode(x.Name)}={HttpUtility.UrlEncode(x.Value?.ToString())}")
                 .ToList();
 
-            var finalUrl = restClient.Options.BaseUrl != null
-            ? new UriBuilder(restClient.Options.BaseUrl)
-            {
-                Path = request.Resource,
-                Query = string.Join("&", queryStringParams)
-            }.Uri.ToString()
-            : request.Resource;
 
+            var finalUrl = request.Resource;
+
+            if (restClient.Options.BaseUrl is not null)
+            {
+                finalUrl = (new UriBuilder(restClient.Options.BaseUrl)
+                {
+                    Path = $"{restClient.Options.BaseUrl.AbsolutePath.TrimEnd('/')}/{request.Resource.TrimStart('/')}",
+                    Query = string.Join("&", queryStringParams),
+                }).Uri.AbsoluteUri;
+            }
 
             var bodyParam = allParameters.FirstOrDefault(x => x.Type == ParameterType.RequestBody);
             if (bodyParam is not null)
             {
+                allParameters.RemoveAll(x => x.Name == "Content-Type");
                 allParameters.Add(new HeaderParameter("Content-Type", bodyParam.ContentType));
+            }
+            
+            var acceptParam= allParameters.FirstOrDefault(x => x.Type == ParameterType.HttpHeader && x.Name== "Accept");
+            if (acceptParam is null)
+            {
+                allParameters.Add(new HeaderParameter("Accept", string.Join(',', restClient.AcceptedContentTypes)));
+            }
+
+            var acceptEncodingParam = allParameters.FirstOrDefault(x => x.Type == ParameterType.HttpHeader && x.Name == "Accept-Encoding");
+            if (acceptEncodingParam is null)
+            {
+                var methods = restClient.Options.AutomaticDecompression;
+                var decompressionMethods = new List<string>();
+
+                if (methods.HasFlag(DecompressionMethods.GZip))
+                    decompressionMethods.Add("gzip");
+                if (methods.HasFlag(DecompressionMethods.Deflate))
+                    decompressionMethods.Add("deflate");
+                if (methods.HasFlag(DecompressionMethods.Brotli))
+                    decompressionMethods.Add("br");
+
+                var acceptEncodingValue = string.Join(", ", decompressionMethods);
+
+                allParameters.Add(new HeaderParameter("Accept-Encoding", acceptEncodingValue));
             }
 
             var cookies = request.CookieContainer?.GetAllCookies()?.ToList() ?? new List<Cookie>();
-
 
             var cycleOptions = new CycleRequestOptions
             {
                 Url = finalUrl,
                 Method = request.Method.ToString(),
-                Headers = allParameters.Where(x => x.Type == ParameterType.HttpHeader).ToDictionary(x => x.Name, x => x.Value?.ToString()),
+                Headers = allParameters.Where(x => x.Type == ParameterType.HttpHeader && x.Name!="ja3" ).ToDictionary(x => x.Name, x => x.Value?.ToString()),
                 UserAgent = userAgentParam.Value.ToString(),
                 Ja3 = ja3Param.Value.ToString(),
                 Body = bodyParam?.Value.ToString(),
@@ -65,6 +93,7 @@ namespace CycleTLS.RestSharp.Helpers
                 }).ToList()
                 : null,
                 Proxy = restClient.Options.Proxy is WebProxy webProxy ? webProxy.toStringWithCredentials() : null,
+                InsecureSkipVerify = true,
             };
 
 
