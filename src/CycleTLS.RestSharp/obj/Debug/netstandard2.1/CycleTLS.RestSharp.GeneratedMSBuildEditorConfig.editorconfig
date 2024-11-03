@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = CycleTLS.RestSharp
+build_property.ProjectDir = C:\Users\Administrator\Downloads\CycleTLS.NET-main\src\CycleTLS.RestSharp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 

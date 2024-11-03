@@ -1,4 +1,7 @@
-﻿namespace CycleTLS.Models
+﻿using System.Collections.Generic;
+using System.Net.Http;
+
+namespace CycleTLS.Models
 {
     public class CycleRequestOptions
     {

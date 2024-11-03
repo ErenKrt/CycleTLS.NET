@@ -2,6 +2,8 @@
 using CycleTLS.Interfaces;
 using CycleTLS.Models;
 using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 using Websocket.Client;
 
 namespace CycleTLS
@@ -24,9 +26,9 @@ namespace CycleTLS
 
         public async Task<CycleResponse> SendAsync(CycleRequestOptions options)
         {
-            WSResponseTask = new();
+            WSResponseTask = new TaskCompletionSource<string>();
 
-            CycleRequest request = new();
+            CycleRequest request = new CycleRequest();
             request.RequestId = $"{DateTime.Now}:{options.Url}";
             request.Options = options;
 
