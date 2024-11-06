@@ -1,33 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Title>CycleTLS.RestSharp</Title>
     <Version>0.1.9</Version>
     <Authors>ErenKrt</Authors>
     <PackageProjectUrl>https://github.com/ErenKrt/CycleTLS.NET</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	<Description>Addon of CycleTLS for RestSharp.</Description>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
 
   <ItemGroup>
-    <PackageReference Include="RestSharp" Version="111.4.0" />
+    <PackageReference Include="RestSharp" Version="112.1.0" />
   </ItemGroup>
 
   <ItemGroup>

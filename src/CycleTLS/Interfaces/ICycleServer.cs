@@ -1,4 +1,6 @@
-﻿namespace CycleTLS.Interfaces
+﻿using System;
+
+namespace CycleTLS.Interfaces
 {
     public interface ICycleServer : IDisposable
     {
