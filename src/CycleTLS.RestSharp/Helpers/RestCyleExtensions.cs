@@ -45,10 +45,9 @@ namespace CycleTLS.RestSharp.Helpers
 				allParameters.Add(new HeaderParameter("Content-Type", bodyParam.ContentType));
 			}
 
-			var cookies = GetAllCookies(request.CookieContainer).Cast<Cookie>() ?? new List<Cookie>();
+            var cookies = request.CookieContainer?.GetAllCookies().ToList() ?? new List<Cookie>();
 
-
-			var cycleOptions = new CycleRequestOptions
+            var cycleOptions = new CycleRequestOptions
 			{
 				Url = finalUrl,
 				Method = request.Method.ToString(),
@@ -56,7 +55,8 @@ namespace CycleTLS.RestSharp.Helpers
 				UserAgent = userAgentParam.Value.ToString(),
 				Ja3 = ja3Param.Value.ToString(),
 				Body = bodyParam?.Value.ToString(),
-				Cookies = cookies.Any()
+				Timeout= request.Timeout ?? restClient.Options.Timeout,
+                Cookies = cookies.Any()
 				? cookies.Select(x => new CycleRequestCookie
 				{
 					Domain = x.Domain,
@@ -86,31 +86,24 @@ namespace CycleTLS.RestSharp.Helpers
 				Server = response.Headers.TryGetValue("Server", out var server) ? server : null
 			};
 		}
+        public static IEnumerable<Cookie> GetAllCookies(this CookieContainer c)
+        {
+            Hashtable k = (Hashtable)c.GetType().GetField("m_domainTable", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(c);
+            foreach (DictionaryEntry element in k)
+            {
+                SortedList l = (SortedList)element.Value.GetType().GetField("m_list", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(element.Value);
+                foreach (var e in l)
+                {
+                    var cl = (CookieCollection)((DictionaryEntry)e).Value;
+                    foreach (Cookie fc in cl)
+                    {
+                        yield return fc;
+                    }
+                }
+            }
+        }
 
-		private static CookieCollection GetAllCookies(CookieContainer container)
-		{
-			var cookies = new CookieCollection();
-
-			var table = (Hashtable)container.GetType()
-				.GetRuntimeFields()
-				.First(x => x.Name == "m_domainTable")
-				.GetValue(container);
-
-			foreach (var entry in table.Values)
-			{
-				var domainEntry = (IDictionary)entry.GetType()
-					.GetProperty("Values")
-					.GetValue(entry);
-
-				foreach (CookieCollection cookieCollection in domainEntry.Values)
-				{
-					cookies.Add(cookieCollection);
-				}
-			}
-
-			return cookies;
-		}
-		public static Parameter TryFind(this List<Parameter> parameters, string name)
+        public static Parameter TryFind(this List<Parameter> parameters, string name)
 		{
 			return parameters.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 		}
