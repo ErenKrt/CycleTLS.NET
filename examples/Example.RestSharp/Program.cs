@@ -5,6 +5,7 @@ using CycleTLS.RestSharp.Helpers;
 using RestSharp;
 using System.Net;
 
+
 ICycleClient cycleClient = new CycleClient(new Uri($"ws://127.0.0.1:9112"));
 
 var proxy = new WebProxy("http://192.168.1.2:1453");
@@ -24,7 +25,7 @@ RestRequest getRequest = new RestRequest()
 
 var resGet = await restClient.ExecuteCycleAsync(getRequest, cycleClient);
 */
-RestRequest postRequest = new RestRequest()
+RestRequest postRequest = new()
 {
     Method = Method.Post,
     Resource = "post",

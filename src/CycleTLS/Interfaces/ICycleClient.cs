@@ -1,4 +1,6 @@
 ﻿using CycleTLS.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace CycleTLS.Interfaces
 {

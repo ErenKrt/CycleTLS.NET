@@ -2,7 +2,8 @@
 using CycleTLS.Interfaces;
 using CycleTLS.Models;
 using Newtonsoft.Json;
-using System.Threading;
+using System;
+using System.Threading.Tasks;
 using Websocket.Client;
 
 namespace CycleTLS
@@ -29,7 +30,7 @@ namespace CycleTLS
             var cancelSource = new CancellationTokenSource(TimeSpan.FromSeconds(100));
             cancelSource.Token.Register(() => WSResponseTask.TrySetException(new TimeoutException($"No response after 100 seconds.")));
 
-            CycleRequest request = new();
+            CycleRequest request = new CycleRequest();
             request.RequestId = $"{DateTime.Now}:{options.Url}";
             request.Options = options;
 
