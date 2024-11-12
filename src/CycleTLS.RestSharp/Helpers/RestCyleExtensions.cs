@@ -94,6 +94,7 @@ namespace CycleTLS.RestSharp.Helpers
                 : null,
                 Proxy = restClient.Options.Proxy is WebProxy webProxy ? webProxy.toStringWithCredentials() : null,
                 InsecureSkipVerify = true,
+                DisableRedirect = true
             };
 
 
