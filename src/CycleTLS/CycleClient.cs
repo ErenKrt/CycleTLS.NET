@@ -3,6 +3,7 @@ using CycleTLS.Interfaces;
 using CycleTLS.Models;
 using Newtonsoft.Json;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Websocket.Client;
 
@@ -26,9 +27,13 @@ namespace CycleTLS
 
         public async Task<CycleResponse> SendAsync(CycleRequestOptions options)
         {
-            WSResponseTask = new();
-            var cancelSource = new CancellationTokenSource(TimeSpan.FromSeconds(100));
-            cancelSource.Token.Register(() => WSResponseTask.TrySetException(new TimeoutException($"No response after 100 seconds.")));
+            WSResponseTask = new TaskCompletionSource<string>();
+
+            if (options.Timeout.HasValue)
+            {
+                var cancelSource = new CancellationTokenSource(options.Timeout.Value);
+                cancelSource.Token.Register(() => WSResponseTask.TrySetException(new TimeoutException($"No response after {options.Timeout.Value.TotalSeconds} seconds.")));
+            }
 
             CycleRequest request = new CycleRequest();
             request.RequestId = $"{DateTime.Now}:{options.Url}";
@@ -44,7 +49,7 @@ namespace CycleTLS
             {
                 return new CycleResponse()
                 {
-                    Status= System.Net.HttpStatusCode.InternalServerError
+                    Status = System.Net.HttpStatusCode.RequestTimeout
                 };
             }
         }

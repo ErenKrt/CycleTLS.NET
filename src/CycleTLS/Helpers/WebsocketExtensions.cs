@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Threading.Tasks;
 using Websocket.Client;
 
@@ -8,7 +9,8 @@ namespace CycleTLS.Helpers
     {
         private static JsonSerializerSettings SerializerSettings = new JsonSerializerSettings()
         {
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         public static void SendJson<T>(this IWebsocketClient WS, T obj)

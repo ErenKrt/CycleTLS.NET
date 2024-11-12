@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace CycleTLS.Models
@@ -13,10 +15,13 @@ namespace CycleTLS.Models
         public string UserAgent { get; set; } = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36";
         public string Proxy { get; set; }
         public List<CycleRequestCookie> Cookies { get; set; }
-        public int? Timeout { get; set; }
+        [JsonIgnore]
+        public TimeSpan? Timeout { get; set; }
         public bool? DisableRedirect { get; set; }
         public List<string> HeaderOrder { get; set; }
         public bool? InsecureSkipVerify { get; set; }
         public bool? ForceHTTP1 { get; set; }
+        [JsonProperty("timeout")]
+        public int? TimeoutInSeconds => Timeout.HasValue ? (int)Timeout.Value.TotalSeconds : (int?)null;
     }
 }

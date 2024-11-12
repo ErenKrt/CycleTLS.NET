@@ -14,6 +14,7 @@ proxy.Credentials = new NetworkCredential("eren", "baba");
 RestClient restClient = new(new RestClientOptions()
 {
     BaseUrl = new Uri("https://example.org"),
+    //Timeout= TimeSpan.FromSeconds(10),
     //Proxy= proxy
 });
 restClient.AddDefaultHeader("ja3", "ja3 value");
@@ -33,12 +34,13 @@ RestRequest postRequest = new()
 
 postRequest.AddHeader("user-agent", "test-ke");
 postRequest.AddQueryParameter("test", "evet");
-postRequest.AddCookie("aga", "aga", "/", "example.com");
-postRequest.AddFile("test", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.jpg"));
+//postRequest.AddCookie("aga", "aga", "/", "example.com");
+//postRequest.AddFile("test", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.jpg"));
 postRequest.AddJsonBody(new
 {
     test = "1"
 });
+//postRequest.Timeout = TimeSpan.FromSeconds(10);
 
 var resPost = await restClient.ExecuteCycleAsync(postRequest, cycleClient);
 
