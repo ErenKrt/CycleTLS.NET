@@ -26,16 +26,27 @@ namespace CycleTLS
 
         public async Task<CycleResponse> SendAsync(CycleRequestOptions options)
         {
-            WSResponseTask = new TaskCompletionSource<string>();
+            WSResponseTask = new();
+            var cancelSource = new CancellationTokenSource(TimeSpan.FromSeconds(100));
+            cancelSource.Token.Register(() => WSResponseTask.TrySetException(new TimeoutException($"No response after 100 seconds.")));
 
             CycleRequest request = new CycleRequest();
             request.RequestId = $"{DateTime.Now}:{options.Url}";
             request.Options = options;
 
-            await CycleWS.SendInstantJson(request);
-
-            var response = await WSResponseTask.Task;
-            return JsonConvert.DeserializeObject<CycleResponse>(response);
+            try
+            {
+                await CycleWS.SendInstantJson(request);
+                var response = await WSResponseTask.Task;
+                return JsonConvert.DeserializeObject<CycleResponse>(response);
+            }
+            catch (Exception err)
+            {
+                return new CycleResponse()
+                {
+                    Status= System.Net.HttpStatusCode.InternalServerError
+                };
+            }
         }
 
         public void Dispose()

@@ -1,4 +1,4 @@
-﻿using CycleTLS.Helpers;
+using CycleTLS.Helpers;
 using CycleTLS.Interfaces;
 using CycleTLS.Models;
 using RestSharp;

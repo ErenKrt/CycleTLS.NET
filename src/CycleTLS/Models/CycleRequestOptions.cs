@@ -16,5 +16,7 @@ namespace CycleTLS.Models
         public int? Timeout { get; set; }
         public bool? DisableRedirect { get; set; }
         public List<string> HeaderOrder { get; set; }
+        public bool? InsecureSkipVerify { get; set; }
+        public bool? ForceHTTP1 { get; set; }
     }
 }
