@@ -6,6 +6,7 @@ A .NET client for [CycleTLS](https://github.com/Danny-Dasilva/CycleTLS).
 ![GitHub Workflow](https://img.shields.io/github/actions/workflow/status/erenkrt/CycleTLS.NET/publish.yml)
 [![CycleTLS.NET](https://img.shields.io/nuget/dt/CycleTLS?label=NuGet%20CycleTLS)](https://www.nuget.org/packages/CycleTLS/)
 [![CycleTLS.NET.RestSharp](https://img.shields.io/nuget/dt/CycleTLS.RestSharp?label=NuGet%20CycleTLS.RestSharp)](https://www.nuget.org/packages/CycleTLS.RestSharp/)
+[![CycleTLS.NET.HttpClient](https://img.shields.io/nuget/dt/CycleTLS.HttpClient?label=NuGet%20CycleTLS.HttpClient)](https://www.nuget.org/packages/CycleTLS.HttpClient/)
 ![GitHub tag](https://img.shields.io/github/v/tag/erenkrt/cycletls.net?label=Version)
 
 Supports .NET 8.0 (Build available for other .Net versions)
