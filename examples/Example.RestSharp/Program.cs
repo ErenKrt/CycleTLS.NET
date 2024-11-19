@@ -1,7 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using CycleTLS;
 using CycleTLS.Interfaces;
-using CycleTLS.RestSharp.Helpers;
+using CycleTLS.RestSharp;
 using RestSharp;
 using System.Net;
 

@@ -35,3 +35,8 @@ jobs:
         run: dotnet nuget push CycleTLS.RestSharp.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_API_KEY}
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
+      - name: Push CycleTLS.HttpClient
+        run: dotnet nuget push CycleTLS.HttpClient.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${NUGET_API_KEY}
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>CycleTLS</Title>
+	<Version>0.2.1</Version>
     <Authors>ErenKrt</Authors>
     <PackageProjectUrl>https://github.com/ErenKrt/CycleTLS.NET</PackageProjectUrl>
-    <Version>0.2.0</Version>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>A C# port of CycleTLS Go library.</Description>
   </PropertyGroup>
 

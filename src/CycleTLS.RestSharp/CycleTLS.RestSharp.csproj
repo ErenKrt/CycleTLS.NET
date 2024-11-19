@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Title>CycleTLS.RestSharp</Title>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <Authors>ErenKrt</Authors>
     <PackageProjectUrl>https://github.com/ErenKrt/CycleTLS.NET</PackageProjectUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+	<Title>CycleTLS.HttpClient</Title>
+	<Version>0.2.1</Version>
+	<Authors>ErenKrt</Authors>
+	<PackageProjectUrl>https://github.com/ErenKrt/CycleTLS.NET</PackageProjectUrl>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Description>Addon of CycleTLS for HttpClient.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CycleTLS\CycleTLS.csproj" />
+  </ItemGroup>
+
+</Project>

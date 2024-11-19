@@ -3,15 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\CycleTLS", "src\CycleTLS\CycleTLS.csproj", "{AA68A63D-9982-487B-80B6-E70BBAB3E228}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS", "src\CycleTLS\CycleTLS.csproj", "{AA68A63D-9982-487B-80B6-E70BBAB3E228}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{3E8E2529-3FF7-40A9-AB17-E39826D7F59E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "examples\Example.Console", "examples\Example.Console\Example.Console.csproj", "{F64BE423-0135-44EE-BC65-9FEC90F735FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Console", "examples\Example.Console\Example.Console.csproj", "{F64BE423-0135-44EE-BC65-9FEC90F735FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "examples\Example.RestSharp", "examples\Example.RestSharp\Example.RestSharp.csproj", "{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.RestSharp", "examples\Example.RestSharp\Example.RestSharp.csproj", "{C5920C41-ED12-4D03-BA8E-11F8209B1AD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\CycleTLS.RestSharp", "src\CycleTLS.RestSharp\CycleTLS.RestSharp.csproj", "{875F412E-6371-415E-BC22-F3B16587A842}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS.RestSharp", "src\CycleTLS.RestSharp\CycleTLS.RestSharp.csproj", "{875F412E-6371-415E-BC22-F3B16587A842}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CycleTLS.HttpClient", "src\CycleTLS.HttpClient\CycleTLS.HttpClient.csproj", "{53A0FE13-FC5B-4892-95BD-66A5339CB849}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.HttpClient", "examples\Example.HttpClient\Example.HttpClient.csproj", "{2B4C3EA4-9F6C-47CA-9C59-6AF562F072DE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.RestSharpHttpClient", "examples\Example.RestSharpHttpClient\Example.RestSharpHttpClient.csproj", "{9997A7CC-A672-4F87-9277-9646C02F5124}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +41,18 @@ Global
 		{875F412E-6371-415E-BC22-F3B16587A842}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{875F412E-6371-415E-BC22-F3B16587A842}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{875F412E-6371-415E-BC22-F3B16587A842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53A0FE13-FC5B-4892-95BD-66A5339CB849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53A0FE13-FC5B-4892-95BD-66A5339CB849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53A0FE13-FC5B-4892-95BD-66A5339CB849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53A0FE13-FC5B-4892-95BD-66A5339CB849}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B4C3EA4-9F6C-47CA-9C59-6AF562F072DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B4C3EA4-9F6C-47CA-9C59-6AF562F072DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B4C3EA4-9F6C-47CA-9C59-6AF562F072DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B4C3EA4-9F6C-47CA-9C59-6AF562F072DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9997A7CC-A672-4F87-9277-9646C02F5124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9997A7CC-A672-4F87-9277-9646C02F5124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9997A7CC-A672-4F87-9277-9646C02F5124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9997A7CC-A672-4F87-9277-9646C02F5124}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +60,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F64BE423-0135-44EE-BC65-9FEC90F735FA} = {3E8E2529-3FF7-40A9-AB17-E39826D7F59E}
 		{C5920C41-ED12-4D03-BA8E-11F8209B1AD2} = {3E8E2529-3FF7-40A9-AB17-E39826D7F59E}
+		{2B4C3EA4-9F6C-47CA-9C59-6AF562F072DE} = {3E8E2529-3FF7-40A9-AB17-E39826D7F59E}
+		{9997A7CC-A672-4F87-9277-9646C02F5124} = {3E8E2529-3FF7-40A9-AB17-E39826D7F59E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E44120A4-C734-4ED9-A80E-A1A05C4F5625}
