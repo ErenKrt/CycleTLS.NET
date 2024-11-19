@@ -32,18 +32,19 @@ namespace CycleTLS.HttpClient
             {
                 Url= request.RequestUri.ToString(),
                 Method = request.Method.ToString(),
-                Cookies = cookies.Any()
-                ? cookies.Select(x => new CycleRequestCookie
+                Cookies = cookies.Select(x => new CycleRequestCookie
                 {
                     Domain = x.Domain,
                     Name = x.Name,
                     Value = x.Value,
-                    Expires = x.Expires.ToString("ddd, dd-MMM-yyyy HH:mm:ss 'EST'", CultureInfo.InvariantCulture),
+                    Expires = x.Expires != DateTime.MinValue ? x.Expires.ToString("ddd, dd-MMM-yyyy HH:mm:ss 'EST'", CultureInfo.InvariantCulture) : null,
                     HttpOnly = x.HttpOnly,
                     MaxAge = 90,
                     Path = x.Path,
-                }).ToList()
-                : null,
+                }).ToList(),
+                Timeout = _options.TimeOut,
+                Headers = request.Headers.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault()),
+                Proxy = (this.UseProxy && this.Proxy != null) ? this.Proxy.ToStringWithCredentials() : null
             };
             
 
@@ -58,24 +59,16 @@ namespace CycleTLS.HttpClient
                 request.Headers.Remove("JA3");
             }
 
-            if(_options.TimeOut != null)
-            {
-                cycleOptions.Timeout = _options.TimeOut;
-            }
-
-            cycleOptions.Headers = request.Headers.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault());
-            cycleOptions.Proxy= (this.UseProxy && this.Proxy != null) ? this.Proxy.ToStringWithCredentials() : null;
 
             if (request.Content != null)
             {
                 cycleOptions.Body = await request.Content.ReadAsStringAsync();
-
                 foreach (var header in request.Content.Headers)
                 {
                     cycleOptions.Headers[header.Key] = header.Value.FirstOrDefault();
                 }
             }
-            
+
 
             var cycleResponse = await _cycleClient.SendAsync(cycleOptions);
 
