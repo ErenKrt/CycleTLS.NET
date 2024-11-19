@@ -59,7 +59,7 @@ var resGet = await cycleClient.SendAsync(new CycleRequestOptions()
 
 You can use the client without the server. You need to start the CycleTLS process and set the port using the WS_PORT variable. After that, set the URL of CycleTLS in the client.
 
-#### ResClient Support
+#### RestClient Support
 
 You need to import the "CycleTLS.RestSharp" namespace into your project.
 
@@ -82,6 +82,59 @@ request.AddHeader("ja3", "ja3 value"); // Set JA3 for specific request
 
 var response= await restClient.ExecuteCycleAsync(request, cycleClient);
 ```
+#### HttpClient Support
+
+You need to import the "CycleTLS.HttpClient" namespace into your project.
+
+```csharp
+var handler = new CycleHandler(new CycleHandlerOptions()
+{
+    CycleClient = cycleClient
+})
+
+var httpClient = new HttpClient(handler)
+{
+    BaseAddress = new Uri("http://example.com"),
+    DefaultRequestHeaders =
+    {
+        { "JA3", "-" },
+        { "User-Agent", "-" }
+    },
+};
+
+/* You can use all features of RestRequest object | For more information look examples */
+
+var response = await httpClient.GetAsync("/");
+```
+
+#### HttpClient & RestClient Support
+
+```csharp
+var httpHandler = new CycleHandler(new CycleHandlerOptions()
+{
+    CycleClient = cycleClient
+});
+
+RestClient restClient = new(httpHandler, configureRestClient: (x) =>
+{
+    x.BaseUrl = new Uri("https://example.org");
+    x.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0";
+});
+
+restClient.AddDefaultHeader("JA3", "772,4865-4866-4867-49195-49199-49196-49200-52393-52392-49171-49172-156-157-47-53,65037-65281-5-18-27-23-35-10-45-16-11-17513-51-13-0-43,25497-29-23-24,0");
+
+// You can use native restClient methods like Get / GetAsync. Also can use post with form / json  or file.
+var resGet = await restClient.ExecuteAsync(new RestRequest()
+{
+    Method = Method.Get,
+});
+
+/* You can use all features of RestRequest object | For more information look examples */
+
+Console.WriteLine(resGet.Content);
+
+```
+
 ## Files you use
 
 * CylceTLS
