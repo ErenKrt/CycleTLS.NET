@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,7 +47,11 @@ namespace CycleTLS.HttpClient
                 Headers = request.Headers.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault()),
                 Proxy = (this.UseProxy && this.Proxy != null) ? this.Proxy.ToStringWithCredentials() : null
             };
-            
+
+            if (cycleOptions.Proxy != null && this.ServerCertificateCustomValidationCallback != null)
+            {
+                cycleOptions.InsecureSkipVerify = this.ServerCertificateCustomValidationCallback.Invoke(null, null, null, SslPolicyErrors.None);
+            }
 
             if (request.Headers.Contains("User-Agent"))
             {
@@ -56,19 +61,18 @@ namespace CycleTLS.HttpClient
             if (request.Headers.Contains("JA3"))
             {
                 cycleOptions.Ja3 = request.Headers.GetValues("JA3").FirstOrDefault();
-                request.Headers.Remove("JA3");
+                cycleOptions.Headers.Remove("JA3");
             }
 
 
             if (request.Content != null)
             {
                 cycleOptions.Body = await request.Content.ReadAsStringAsync();
-                foreach (var header in request.Content.Headers)
+                foreach (var header in request.Content.Headers.Where(x => x.Key != "Content-Length")) // Content-Length calculated by CycleTLS
                 {
                     cycleOptions.Headers[header.Key] = header.Value.FirstOrDefault();
                 }
             }
-
 
             var cycleResponse = await _cycleClient.SendAsync(cycleOptions);
 

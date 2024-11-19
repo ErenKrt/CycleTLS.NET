@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Nullable>enable</Nullable>
+	<Title>CycleTLS.HttpClient</Title>
+	<Version>0.2.0</Version>
+	<Authors>ErenKrt</Authors>
+	<PackageProjectUrl>https://github.com/ErenKrt/CycleTLS.NET</PackageProjectUrl>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<Description>Addon of CycleTLS for HttpClient.</Description>
   </PropertyGroup>
 
   <ItemGroup>
