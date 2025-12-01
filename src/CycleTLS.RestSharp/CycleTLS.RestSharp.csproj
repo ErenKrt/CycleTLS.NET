@@ -12,7 +12,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="RestSharp" Version="112.1.0" />
+    <PackageReference Include="RestSharp" Version="113.0.0" />
   </ItemGroup>
 
   <ItemGroup>
